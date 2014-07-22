@@ -76,32 +76,18 @@ if [ -n "$LXC_ROOTFS_MOUNT" -a -d $LXC_ROOTFS_MOUNT/etc ]; then
 Section "ServerFlags"
   Option "AutoAddDevices" "false"
 EndSection
+EOF
+	(cd /dev/input && for input in event*; do
+        cat >>$LXC_ROOTFS_MOUNT/etc/X11/xorg.conf <<EOF
 
 Section "InputDevice"
-  Identifier "keyboard0"
+  Identifier "$input"
   Driver "evdev"
-  Option "Device" "/dev/input/by-path/platform-i8042-serio-0-event-kbd"
-EndSection
-
-Section "InputDevice"
-  Identifier "mouse0"
-  Driver "evdev"
-  Option "Device" "/dev/input/by-path/platform-i8042-serio-1-event-mouse"
-EndSection
-
-Section "InputDevice"
-  Identifier "mouse1"
-  Driver "evdev"
-  Option "Device" "/dev/input/by-path/platform-i8042-serio-1-mouse"
-EndSection
-
-Section "ServerLayout"
-  Identifier "Desktop"
-  InputDevice "keyboard0" "CoreKeyboard"
-  InputDevice "mouse0" "CorePointer"
-  InputDevice "mouse1" "CorePointer"
+  Option "Device" "/dev/input/$input"
+  Option "AutoServerLayout" "true"
 EndSection
 EOF
+	done)
 
         if [ ! -f $LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf ]; then
                 mkdir -p $LXC_ROOTFS_MOUNT/etc/lightdm
