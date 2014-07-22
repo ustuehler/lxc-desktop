@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# Add device nodes to run a full desktop in the container. As everyone
+# will point out this makes the host of this container a lot less secure,
+# of course.
+#
+
+device_clone_script()
+{
+        echo "# $1"
+        case `stat -L -c '%F' $1` in
+                "block special file")
+                        echo "rm -f $LXC_ROOTFS_MOUNT$1"
+                        stat -L -c "mknod $LXC_ROOTFS_MOUNT%n b 0x%t 0x%T" $1
+                        ;;
+                "character special file")
+                        echo "rm -f $LXC_ROOTFS_MOUNT$1"
+                        stat -L -c "mknod $LXC_ROOTFS_MOUNT%n c 0x%t 0x%T" $1
+                        ;;
+                "directory")
+                        echo "mkdir -p $LXC_ROOTFS_MOUNT$1"
+                        ;;
+                *)
+                        return
+                        ;;
+        esac
+        stat -L -c "chmod %a $LXC_ROOTFS_MOUNT%n" $1
+        stat -L -c "chown %u:%g $LXC_ROOTFS_MOUNT%n" $1
+}
+
+clone_device()
+{
+        echo "`device_clone_script $1`"
+
+        if [ -n "$LXC_ROOTFS_MOUNT" -a -d $LXC_ROOTFS_MOUNT/dev ]; then
+                eval "`device_clone_script $1`"
+        fi
+}
+
+clone_devices()
+{
+        for _device in "$@"; do
+                clone_device $_device
+        done
+}
+
+exec 2>&1
+
+clone_devices \
+        /dev/vga_arbiter \
+        /dev/fb0 \
+        /dev/dri \
+        /dev/dri/card* \
+        /dev/input \
+        /dev/input/* \
+        /dev/input/*/* \
+        /dev/psaux \
+        /dev/tty[0-9] \
+        /dev/tty[0-9][0-9] \
+        /dev/console \
+        /dev/net \
+        /dev/net/tun
+
+if [ -n "$LXC_ROOTFS_MOUNT" -a -d $LXC_ROOTFS_MOUNT/etc ]; then
+        #rm -f $LXC_ROOTFS_MOUNT/dev/vga_arbiter
+        #rm -f $LXC_ROOTFS_MOUNT/dev/fb0
+        #rm -f $LXC_ROOTFS_MOUNT/dev/console
+        for i in 1 2 3 4 5 6 7; do
+                rm -f $LXC_ROOTFS_MOUNT/dev/tty$i
+        done
+        echo "Devices now:"
+        find $LXC_ROOTFS_MOUNT/dev -ls
+
+        mkdir -p $LXC_ROOTFS_MOUNT/etc/X11
+        cat >$LXC_ROOTFS_MOUNT/etc/X11/xorg.conf <<EOF
+Section "ServerFlags"
+  Option "AutoAddDevices" "false"
+EndSection
+
+Section "InputDevice"
+  Identifier "keyboard0"
+  Driver "evdev"
+  Option "Device" "/dev/input/by-path/platform-i8042-serio-0-event-kbd"
+EndSection
+
+Section "InputDevice"
+  Identifier "mouse0"
+  Driver "evdev"
+  Option "Device" "/dev/input/by-path/platform-i8042-serio-1-event-mouse"
+EndSection
+
+Section "InputDevice"
+  Identifier "mouse1"
+  Driver "evdev"
+  Option "Device" "/dev/input/by-path/platform-i8042-serio-1-mouse"
+EndSection
+
+Section "ServerLayout"
+  Identifier "Desktop"
+  InputDevice "keyboard0" "CoreKeyboard"
+  InputDevice "mouse0" "CorePointer"
+  InputDevice "mouse1" "CorePointer"
+EndSection
+EOF
+
+        if [ ! -f $LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf ]; then
+                mkdir -p $LXC_ROOTFS_MOUNT/etc/lightdm
+                cat >$LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf <<EOF
+[LightDM]
+minimum-vt=8
+EOF
+        fi
+
+	mkdir -p $LXC_ROOTFS_MOUNT/usr/share/locale/en/LC_MESSAGES
+	msgfmt -o $LXC_ROOTFS_MOUNT/usr/share/locale/en/LC_MESSAGES/unity.mo - <<EOF
+msgid "Ubuntu Desktop"
+msgstr "$LXC_NAME"
+EOF
+fi
+
+exit 0
