@@ -25,8 +25,7 @@ Allow incoming connections via SSH and reject *all* outgoing traffic:
     class { '::lxc_desktop::host':
       ufw_enable     => true,
       ufw_allow_in   => ['ssh/tcp'],
-      ufw_allow_out  => ['domain/udp'],
-      ufw_allow_out  => ['8140/tcp'],
+      ufw_allow_out  => ['domain/udp', 'ssh/tcp', '8140/tcp'],
       ufw_reject_out => true
     }
 
