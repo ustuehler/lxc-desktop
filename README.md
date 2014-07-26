@@ -31,7 +31,7 @@ Containing
 7. Rename the container's "ubuntu" user in /etc/{passwd,shadow,group} and move /home/ubuntu.
 8. In container: `sudo apt-get purge $(dpkg -l | awk '$2 ~ /^plymouth-theme-/ {print $2}')` to avoid whoopsie reports because plymouthd crashes at shutdown. :)
 
-For other desktop containers change "minimum-vt=vtX" in $LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf.
+For other desktop containers change `minimum-vt=vtX` in $LXC\_ROOTFS\_MOUNT/etc/lightdm/lightdm.conf.
 
 Customizing (host and container, optionally)
 --------------------------------------------
@@ -40,7 +40,7 @@ Change Privacy Settings on host.
 
 Switch Regional Formats to "English (United States)" in Language Support and "Apply System-Wide".
 
-sudo msgfmt -o /usr/share/locale/en/LC_MESSAGES/unity.mo - <<EOF
-msgid "Ubuntu Desktop"
-msgstr "`hostname`"
-EOF
+    sudo msgfmt -o /usr/share/locale/en/LC_MESSAGES/unity.mo - <<EOF
+    msgid "Ubuntu Desktop"
+    msgstr "`hostname`"
+    EOF
