@@ -11,13 +11,24 @@ Post-Installing
 3. pvscan && lvreduce -L 12g -r ubuntu-vg/root
 4. Reboot.
 
-Hardening
----------
+Hardening (Optional)
+--------------------
 
-1. `echo disable > /proc/acpi/ibm/bluetooth` in /etc/rc.local for Thinkpads (better: udev rule)
-2. `sudo ufw enable`
-3. `sudo ufw allow 22/tcp`
-4. `sudo apt-get install openssh-server`
+Disable Bluetooth on the host system:
+
+    class { '::lxc_desktop::host':
+      kill_bluetooth => true
+    }
+
+Allow incoming connections via SSH and reject *all* outgoing traffic:
+
+    class { '::lxc_desktop::host':
+      ufw_enable     => true,
+      ufw_allow_in   => ['ssh/tcp'],
+      ufw_allow_out  => ['domain/udp'],
+      ufw_allow_out  => ['8140/tcp'],
+      ufw_reject_out => true
+    }
 
 Containing
 ----------
