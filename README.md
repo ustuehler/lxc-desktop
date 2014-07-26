@@ -34,7 +34,6 @@ Containing
 
 1. Install "lxc" package.
 2. Set `lxc.bdev.lvm.vg = ubuntu-vg` in /etc/lxc/lxc.conf.
-3. Install /etc/lxc/desktop.conf and /etc/lxc/hooks.
 4. sudo lxc-create -n container -B lvm --fssize 32G -t ubuntu -f /etc/lxc/desktop.conf
 5. sudo lxc-start -n container -d
 6. sudo lxc-attach -n container -- apt-get install -y ubuntu-desktop
