@@ -1,13 +1,11 @@
 # LXC host
 class lxc_desktop::host(
-  $purge_unmanaged_hooks = false,
   $kill_bluetooth        = false,
   $ufw_enable            = false,
   $ufw_allow_in          = [],
   $ufw_allow_out         = [],
   $ufw_reject_out        = false)
 {
-  validate_bool($purge_unmanaged_hooks)
   validate_bool($kill_bluetooth)
   validate_bool($ufw_enable)
   validate_array($ufw_allow_in)
@@ -34,7 +32,6 @@ class lxc_desktop::host(
     ensure  => directory,
     source  => 'puppet:///modules/lxc_desktop/hooks',
     recurse => true,
-    purge   => $purge,
     mode    => '0755',
   }
 
