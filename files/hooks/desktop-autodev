@@ -61,6 +61,16 @@ clone_devices \
         /dev/net \
         /dev/net/tun
 
+# For Docker in LXC with lxc.aa_profile = lxc-container-default-with-nesting.
+clone_devices \
+	/dev/loop-control \
+	/dev/loop[0-9]*
+
+# For audio output, when not using PulseAudio over TCP.  I can hear output
+# from aplay with this but PulseAudio in user mode didn't work with this.
+#clone_devices \
+#	/dev/snd/*
+
 if [ -n "$LXC_ROOTFS_MOUNT" -a -d $LXC_ROOTFS_MOUNT/etc ]; then
         #rm -f $LXC_ROOTFS_MOUNT/dev/vga_arbiter
         #rm -f $LXC_ROOTFS_MOUNT/dev/fb0
