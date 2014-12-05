@@ -1,0 +1,28 @@
+---
+- name: Install UFW
+  apt: name=ufw
+
+- name: Allow outgoing ICMPv4 echo requests
+  lineinfile: dest=/etc/ufw/before.rules insertbefore="^# don't delete the 'COMMIT' line" line="-A ufw-before-output -p icmp --icmp-type echo-request -j ACCEPT"
+
+- name: Enable UFW
+  ufw: state=enabled
+
+- name: Drop incoming traffic
+  ufw: direction=incoming policy=deny
+
+- name: Allow SSH connections on LXC bridge interface
+  ufw: rule=allow interface=lxcbr0 direction=in proto=tcp src=10.0.3.0/24 dest=10.0.3.0/24 to_port=22
+
+- name: Allow PulseAudio sound output from LXC instances
+  ufw: rule=allow interface=lxcbr0 direction=in proto=tcp src=10.0.3.0/24 dest=10.0.3.1 to_port=4713
+
+- name: Reject outgoing traffic
+  ufw: direction=outgoing policy=reject
+
+- name: Allow outgoing {{ item }}
+  ufw: rule=allow direction=out proto={{ item.split('/')[1] }} to_port={{ item.split('/')[0] }}
+  with_items:
+  - domain/udp
+  - ssh/tcp
+  - 8140/tcp

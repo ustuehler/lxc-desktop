@@ -1,0 +1,5 @@
+---
+- name: install Ubuntu desktop
+  apt: pkg=ubuntu-desktop
+#- name: disable plymouth
+#  shell: ...
