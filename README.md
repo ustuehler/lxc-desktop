@@ -36,7 +36,7 @@ would run Linux anyway and you don't think that VMs would provide much better
 security, you can trade the isolation of VMs against the performance of Linux
 containers with direct hardware access.
 
-Installing The Host Operationg System
+Installing The Host Operating System
 -------------------------------------
 
 1. Prepare a bootable USB stick or other installation media with Ubuntu 14.04
