@@ -17,6 +17,15 @@ sudo dpkg -i ../lxc-desktop_*_all.deb
 sudo apt-get -f install
 ```
 
+If you want to speed up the creation and updating of the host system and
+desktop containers using apt-cacher-ng(8), simply install the lxc-desktop-cache
+package.
+
+```text
+sudo dpkg -i ../lxc-desktop-cache_*_all.deb
+sudo apt-get -f install
+```
+
 Now you're ready to create the first desktop container:
 
 ```text
