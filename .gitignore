@@ -2,6 +2,7 @@
 /debian/files
 /debian/lxc-desktop/
 /debian/lxc-desktop.debhelper.log
+/debian/lxc-desktop.postrm.debhelper
 /debian/lxc-desktop.substvars
 /debian/substvars
 /debian/tmp/

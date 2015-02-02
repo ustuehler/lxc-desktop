@@ -1,0 +1,11 @@
+Template: lxc-desktop/enable_pulseaudio_tcp
+Type: boolean
+Default: false
+Description: Enable the PulseAudio TCP protocol?
+ To support audio in LXC containers and in particular to play audio in the
+ background (when they are not running on the current virtual terminal) the
+ PulseAudio server on the host needs to allow TCP connections from the LXC
+ network (10.0.3.0/24).
+ .
+ If you say "Yes" here the PulseAudio system and client configuration files
+ are modified to enable and use the TCP protocol.

@@ -5,6 +5,8 @@
 # of course.
 #
 
+PULSE_CLIENT_CONF=/etc/pulse/client.conf
+
 device_clone_script()
 {
         echo "# $1"
@@ -111,5 +113,8 @@ msgid "Ubuntu Desktop"
 msgstr "$LXC_NAME"
 EOF
 fi
+
+mkdir -p "$LXC_ROOTFS_MOUNT`dirname $PULSE_CLIENT_CONF`"
+cp -p $PULSE_CLIENT_CONF "$LXC_ROOTFS_MOUNT$PULSE_CLIENT_CONF"
 
 exit 0

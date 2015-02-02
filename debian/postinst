@@ -1,0 +1,34 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+PULSE_SYSTEM_PA=/etc/pulse/system.pa
+PULSE_CLIENT_CONF=/etc/pulse/client.conf
+
+db_get lxc-desktop/enable_pulseaudio_tcp
+restart_pulseaudio=false
+if [ "$RET" = "true" ]; then
+    if ! grep -q 'load-module module-native-protocol-tcp auth-ip-acl=10.0.3.0/24' $PULSE_SYSTEM_PA; then
+	echo 'load-module module-native-protocol-tcp auth-ip-acl=10.0.3.0/24' >> $PULSE_SYSTEM_PA
+        restart_pulseaudio=true
+    fi
+    if ! grep -q 'default-server = tcp4:10.0.3.1:4713' $PULSE_CLIENT_CONF; then
+	echo 'default-server = tcp4:10.0.3.1:4713' >> $PULSE_CLIENT_CONF
+    fi
+else
+    if grep -q 'load-module module-native-protocol-tcp auth-ip-acl=10.0.3.0/24' $PULSE_SYSTEM_PA; then
+	grep -v 'load-module module-native-protocol-tcp auth-ip-acl=10.0.3.0/24' $PULSE_SYSTEM_PA > $PULSE_SYSTEM_PA.new
+	cat $PULSE_SYSTEM_PA.new > $PULSE_SYSTEM_PA
+	rm $PULSE_SYSTEM_PA.new
+        restart_pulseaudio=true
+    fi
+    if grep -q 'default-server = tcp4:10.0.3.1:4713' $PULSE_CLIENT_CONF; then
+	grep -v 'default-server = tcp4:10.0.3.1:4713' $PULSE_CLIENT_CONF > $PULSE_CLIENT_CONF.new
+	cat $PULSE_CLIENT_CONF.new > $PULSE_CLIENT_CONF
+	rm $PULSE_CLIENT_CONF.new
+    fi
+fi
+if $restart_pulseaudio; then
+    /usr/sbin/service pulseaudio restart
+fi

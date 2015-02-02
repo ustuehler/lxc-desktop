@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Do you like debian?
+db_input high lxc-desktop/enable_pulseaudio_tcp || true
+db_go
