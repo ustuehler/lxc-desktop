@@ -1,0 +1,87 @@
+#!/bin/bash
+
+#
+# template script for creating an Ubuntu Desktop LXC container
+#
+# This script is based on and a wrapper for the lxc-ubuntu template.
+#
+
+# Copyright © 2015 Uwe Stuehler <uwe@bsdx.de>
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+set -e
+
+usage()
+{
+    cat <<EOF
+$1 -h|--help -n|--name=<name> -p|--path=<path> --rootfs=<rootfs>
+  [-d|--debug]
+EOF
+    return 0
+}
+
+options=$(getopt -o dhn:p: -l debug,help,name:,path:,rootfs: -- "$@")
+if [ $? -ne 0 ]; then
+    usage $(basename $0)
+    exit 1
+fi
+eval set -- "$options"
+
+debug=false
+name=
+path=
+rootfs=
+packages=
+while true
+do
+    case "$1" in
+    -d|--debug)     debug=true; shift;;
+    -h|--help)      usage $0 && exit 0;;
+    -n|--name)      name=$2; shift 2;;
+    -p|--path)      path=$2; shift 2;;
+    --rootfs)       rootfs=$2; shift 2;;
+    --)             shift 1; break ;;
+     *)             break ;;
+    esac
+done
+
+if [ -z "$name" ]; then
+    usage $(basename $0)
+    exit 1
+fi
+
+if [ -z "$path" ]; then
+    usage $(basename $0)
+    exit 1
+fi
+
+if [ -z "$rootfs" ]; then
+    usage $(basename $0)
+    exit 1
+fi
+
+if $debug; then
+    set -x
+fi
+
+cat >> $path/config <<EOF
+lxc.include = /usr/share/lxc/config/desktop.conf
+EOF
+
+packages="ubuntu-desktop $packages"
+
+/usr/share/lxc/templates/lxc-ubuntu --name="$name" --path="$path" \
+  --rootfs="$rootfs" --packages="$packages"

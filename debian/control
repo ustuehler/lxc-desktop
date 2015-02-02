@@ -1,0 +1,13 @@
+Source: lxc-desktop
+Maintainer: Uwe Stuehler <ustuehler@bsdx.de>
+Section: admin
+Priority: optional
+Build-Depends: debhelper (>= 9)
+
+Package: lxc-desktop
+Architecture: all
+Depends: lxc-templates
+Description: Linux container desktop environment
+ This package contains tools for running multiple Linux containers with
+ graphical desktop environments on a single host. Each of the desktop
+ Linux containers occupies a new virtual terminal (VT).

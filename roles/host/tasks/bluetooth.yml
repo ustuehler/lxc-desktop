@@ -1,8 +1,0 @@
----
-- name: disable Bluetooth devices in udev
-  copy: src=files/udev/rules.d/99-bluetooth.rules dest=/etc/udev/rules.d/99-bluetooth.rules owner=root group=root mode=0644
-  when: kill_bluetooth | bool
-
-- name: don't disable Bluetooth devices in udev
-  file: path=/etc/udev/rules.d/99-bluetooth.rules state=absent
-  when: not ( kill_bluetooth | bool )

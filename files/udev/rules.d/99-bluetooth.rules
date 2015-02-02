@@ -1,2 +1,0 @@
-# Disable any Bluetooth HCI as soon as it is found.
-SUBSYSTEM=="rfkill", ATTR{type}=="bluetooth", ATTR{state}="0"

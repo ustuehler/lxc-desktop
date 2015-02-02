@@ -99,13 +99,11 @@ EndSection
 EOF
 	done)
 
-        if [ ! -f $LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf ]; then
-                mkdir -p $LXC_ROOTFS_MOUNT/etc/lightdm
-                cat >$LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf <<EOF
+        mkdir -p $LXC_ROOTFS_MOUNT/etc/lightdm
+        cat >$LXC_ROOTFS_MOUNT/etc/lightdm/lightdm.conf <<EOF
 [LightDM]
-minimum-vt=8
+minimum-vt=$(fgconsole --next-available)
 EOF
-        fi
 
 	mkdir -p $LXC_ROOTFS_MOUNT/usr/share/locale/en/LC_MESSAGES
 	msgfmt -o $LXC_ROOTFS_MOUNT/usr/share/locale/en/LC_MESSAGES/unity.mo - <<EOF
