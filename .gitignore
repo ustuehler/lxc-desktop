@@ -1,6 +1,11 @@
 /debian/debhelper.log
 /debian/files
 /debian/lxc-desktop/
+/debian/lxc-desktop-cache/
+/debian/lxc-desktop-cache.debhelper.log
+/debian/lxc-desktop-cache.postinst
+/debian/lxc-desktop-cache.postrm
+/debian/lxc-desktop-cache.substvars
 /debian/lxc-desktop.debhelper.log
 /debian/lxc-desktop.postrm.debhelper
 /debian/lxc-desktop.substvars

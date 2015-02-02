@@ -1,0 +1,3 @@
+usr/share/lxc/config/desktop.conf
+usr/share/lxc/hooks/desktop-autodev
+usr/share/lxc/templates/lxc-ubuntu-desktop

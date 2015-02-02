@@ -11,3 +11,12 @@ Description: Linux container desktop environment
  This package contains tools for running multiple Linux containers with
  graphical desktop environments on a single host. Each of the desktop
  Linux containers occupies a new virtual terminal (VT).
+
+Package: lxc-desktop-cache
+Architecture: all
+Depends: lxc-desktop, apt-cacher-ng
+Description: Linux container desktop environment - apt-cacher-ng support
+ This package configure apt-cacher-ng on the LXC host so that all
+ packages required by LXC desktop containers are downloaded and cached
+ on the host.  This greatly speeds up the creation and updating of the
+ host system and desktop containers.
