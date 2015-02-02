@@ -117,4 +117,15 @@ fi
 mkdir -p "$LXC_ROOTFS_MOUNT`dirname $PULSE_CLIENT_CONF`"
 cp -p $PULSE_CLIENT_CONF "$LXC_ROOTFS_MOUNT$PULSE_CLIENT_CONF"
 
+if ! grep -q 'rm -f /var/crash/_sbin_plymouthd.0.crash' $LXC_ROOTFS_MOUNT/etc/rc.local; then
+	/bin/ed $LXC_ROOTFS_MOUNT/etc/rc.local <<EOF
+/^exit 0
+i
+rm -f /var/crash/_sbin_plymouthd.0.crash
+.
+w
+q
+EOF
+fi
+
 exit 0
