@@ -61,7 +61,8 @@ clone_devices \
         /dev/tty[0-9][0-9] \
         /dev/console \
         /dev/net \
-        /dev/net/tun
+        /dev/net/tun \
+        /dev/video0
 
 # For Docker in LXC with lxc.aa_profile = lxc-container-default-with-nesting.
 clone_devices \
