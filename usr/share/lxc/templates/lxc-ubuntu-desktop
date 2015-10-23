@@ -28,12 +28,13 @@ usage()
 {
     cat <<EOF
 $1 -h|--help -n|--name=<name> -p|--path=<path> --rootfs=<rootfs>
-  [-d|--debug]
+  [-d|--debug] [--packages=<packages>]
+packages: comma separated list of packages to add
 EOF
     return 0
 }
 
-options=$(getopt -o dhn:p: -l debug,help,name:,path:,rootfs: -- "$@")
+options=$(getopt -o dhn:p: -l debug,help,name:,path:,rootfs:,packages: -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -53,6 +54,7 @@ do
     -n|--name)      name=$2; shift 2;;
     -p|--path)      path=$2; shift 2;;
     --rootfs)       rootfs=$2; shift 2;;
+    --packages)     packages=$2; shift 2;;
     --)             shift 1; break ;;
      *)             break ;;
     esac
