@@ -17,7 +17,7 @@ Quick start on a Ubuntu 14.04 host
 
 ```text
 git clone https://github.com/ustuehler/lxc-desktop && cd lxc-desktop
-sudo apt-get install ubuntu-dev-tools
+sudo apt-get install ubuntu-dev-tools debhelper
 dpkg-buildpackage -uc -us
 sudo dpkg -i ../lxc-desktop_*_all.deb
 sudo apt-get -f install
